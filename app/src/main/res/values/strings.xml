@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Zumper</string>
+    <string name="permission_denied">Location Permission Denied</string>
+</resources>
