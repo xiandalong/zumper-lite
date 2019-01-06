@@ -25,6 +25,8 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, OnMapReadyCallback {
     private static final int PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final float MIN_ZOOM_PREFERENCE = 6.0f;
+    private static final float MAX_ZOOM_PREFERENCE = 14.0f;
 
     private GoogleMap map;
     private FusedLocationProviderClient providerClient;
@@ -46,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.map = googleMap;
+        map = googleMap;
+        map.setMinZoomPreference(MIN_ZOOM_PREFERENCE);
+        map.setMaxZoomPreference(MAX_ZOOM_PREFERENCE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             presenter.onMapReady();
