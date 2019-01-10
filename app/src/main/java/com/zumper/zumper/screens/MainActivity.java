@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -19,8 +20,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zumper.zumper.R;
+import com.zumper.zumper.model.RestaurantLocation;
+import com.zumper.zumper.model.RestaurantResponse;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, OnMapReadyCallback {
@@ -31,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private GoogleMap map;
     private FusedLocationProviderClient providerClient;
     private MainPresenter presenter;
+    private SupportMapFragment mapFragment;
+
+    @OnClick(R.id.list_button)
+    public void onListButtonClicked() {
+        presenter.onListButtonClicked();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         initMap();
 
         providerClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override
@@ -102,8 +118,21 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
+    @Override
+    public void showNearbyRestaurants(@NonNull RestaurantLocation location, @NonNull String name) {
+        LatLng latLng = new LatLng(location.lat, location.lng);
+        map.addMarker(new MarkerOptions().title(name).position(latLng));
+    }
+
+    @Override
+    public void gotoListFragment(@NonNull RestaurantResponse response) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.map, ListFragment.newInstance(response)).addToBackStack(null);
+        transaction.commit();
+    }
+
     private void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
