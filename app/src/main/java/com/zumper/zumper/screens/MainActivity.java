@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void gotoListFragment(@NonNull RestaurantResponse response) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.map, ListFragment.newInstance(response)).addToBackStack(null);
+        transaction.replace(R.id.map, ListFragment.newInstance(response));
         transaction.commit();
     }
 

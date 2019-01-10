@@ -2,7 +2,9 @@ package com.zumper.zumper.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RestaurantLocation {
+import java.io.Serializable;
+
+public class RestaurantLocation implements Serializable {
     @SerializedName("lat")
     public float lat;
     @SerializedName("lng")
